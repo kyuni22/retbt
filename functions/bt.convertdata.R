@@ -4,7 +4,7 @@
 ####################################################################################################
 bt.convertdata <- function(dataEnv){
   
-  codes <- ls(testEnv)
+  codes <- ls(dataEnv)
   
   alldata <- {}
   

@@ -11,9 +11,9 @@ bt.quantile <- function(sim.data, sim.factor, n, name='sig'){
   #n Quantile
   sim.data[[name]] <- as.factor(unsplit(lapply(split(sim.data[[sim.factor]], by.dates),
                                                   function(x){
-                                                    factor(cut(x, breaks = quantile(x, seq(0, 1, 1/n),
+                                                    cut(x, breaks = quantile(x, seq(0, 1, 1/n),
                                                                                     na.rm = TRUE),
-                                                               include.lowest = TRUE, labels = FALSE))
+                                                               include.lowest = TRUE, labels = FALSE)
                                                   }),
                                            by.dates))
   

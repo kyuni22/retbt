@@ -7,57 +7,64 @@ library('xtable')
 library('Hmisc')
 
 #Load functions
-sapply(list.files(pattern="[.]R$", path='functions/', full.names=TRUE), source)
+sapply(list.files(pattern="[.]R$", path='funtions/', full.names=TRUE), source)
 
 #What Code?
-#symbols <- c('A005930','A030200','A055550','A005490','A000660','A010140',
-#           'A105560','A000150','A015760','A096770','A036460','A051910',
-#           'A029780','A053000','A009540','A066570','A000810','A042670',
-#           'A012330','A010620','A005380','A034020','A034220','A006360',
-#           'A004940','A000720','A010060','A006260','A000270','A024110',
-#           'A028050','A006400','A003550','A009150','A028670','A004020',
-#           'A005940','A011070','A001300','A060980','A117930','A004000',
-#           'A000240','A012450','A069960','A036570','A001040','A000880',
-#           'A023530','A016360','A003490','A000830','A003600','A078930',
-#           'A033780','A011170','A042660','A006800','A138930','A009830',
-#           'A010950','A035420','A010130','A010130')
-symbols <- read.csv("./data/symbols.csv")[,1]
+symbols <- c('A005930','A030200','A055550','A005490','A000660','A010140',
+           'A105560','A000150','A015760','A096770','A036460','A051910',
+           'A029780','A053000','A009540','A066570','A000810','A042670',
+           'A012330','A010620','A005380','A034020','A034220','A006360',
+           'A004940','A000720','A010060','A006260','A000270','A024110',
+           'A028050','A006400','A003550','A009150','A028670','A004020',
+           'A005940','A011070','A001300','A060980','A117930','A004000',
+           'A000240','A012450','A069960','A036570','A001040','A000880',
+           'A023530','A016360','A003490','A000830','A003600','A078930',
+           'A033780','A011170','A042660','A006800','A138930','A009830',
+           'A010950','A035420','A010130','A010130')
 
 #Set Enviornment
+basicEnv <- new.env()
 factorEnv <- new.env()
 
 #Setting
 initDate <- '2006-01-01'
 DB_info <- "Driver={MySQL ODBC 5.1 Driver};DataBase=;Pwd=3450;UID=abcd;Server=localhost;OPTION=3"
 
+#Load Data - Basic Prc Data
+attr_condition <- "Select tDate, Close, Mkt_cap from sim.s01 where Close is not null and sCode = "
+getSymbols.DB(DB_info, attr_condition, symbols, from=initDate, env=basicEnv)
+
 #Load Data - Factors
-attr_condition <- "Select tDate, Close, Mkt_Cap, Inst_1W, Sec_1W, Fund_1W, Pension_1W, Foreign_1W, Others_1W from sim.f01 where sCode = "
+attr_condition <- "Select tDate, Inst_1W, Sec_1W, Fund_1W, Pension_1W, Foreign_1W, Others_1W from sim.f01 where sCode = "
 getSymbols.DB(DB_info, attr_condition, symbols, from=initDate, env=factorEnv)
 
-#Make adjut factorEnv
+factor_to_test <- c("Foreign_1W","Inst_1W")
+factor_name <- paste(factor_to_test[1],factor_to_test[2],sep="_")
+
+#Make testEnv
+testEnv <- new.env()
 for(symbol in symbols) {
+  assign(symbol, merge(basicEnv[[symbol]], factorEnv[[symbol]][,factor_to_test], all=FALSE), testEnv)
   #Lagging Except Price -> For backtesting purpose
-  Close <- Cl(factorEnv[[symbol]])
-  factorEnv[[symbol]] <- lag(factorEnv[[symbol]])
-  factorEnv[[symbol]][,'Close'] <- Close
+  testEnv[[symbol]]$temp <- testEnv[[symbol]][,factor_to_test[1]] + testEnv[[symbol]][,factor_to_test[2]]
+  names(testEnv[[symbol]])[5] <- factor_name  
+  Close <- Cl(testEnv[[symbol]])
+  testEnv[[symbol]] <- lag(testEnv[[symbol]])
+  testEnv[[symbol]][,'Close'] <- Close
   #Return 
-  factorEnv[[symbol]]$ret <- ROC(Cl(factorEnv[[symbol]]), type="discrete")
-  factorEnv[[symbol]]$ret_1W <- lag(factorEnv[[symbol]]$ret)
+  testEnv[[symbol]]$ret <- ROC(Cl(testEnv[[symbol]]), type="discrete")
+  #Return 
+  testEnv[[symbol]]$ret_1W <- lag(testEnv[[symbol]]$ret)
 }
 ## Note: you can make it fwd return instead of using backward return
 
 #Convert to data.frame
-allsimdata <- bt.convertdata(factorEnv)
-#Ranking
-allsimdata[['Mkt_cap_Rank']] <- bt.rank(allsimdata, 'Mkt_Cap', 'date')
-#### Mkt_Cap filtering
-MktCap.limit <- 50
-allsimdata <- allsimdata[which(allsimdata$Mkt_cap_Rank < MktCap.limit + 1),]
+allsimdata <- bt.convertdata(testEnv)
+allsimdata <- na.omit(allsimdata)
 
 #Add Column
-factor_name <- "Foreign_1W"
 factor <- paste(factor_name,"Mkt_cap", sep="_")
-allsimdata[[factor]] <- allsimdata[[factor_name]] / allsimdata$Mkt_Cap
+allsimdata[[factor]] <- allsimdata[[factor_name]] / allsimdata$Mkt_cap
 
 #Making Quantile
 allsimdata <- bt.quantile(allsimdata, factor, 5, name='sig')
@@ -70,7 +77,7 @@ simsum.s <- bt.simreturn(allsimdata, 0) # Return for Short!
 # Benchmark
 bmname <- 'KM1'
 bm <- bt.bmdata(bmname)[-1,]
-bm <- bm[index(bm) %in% index(factorEnv$A005930),]
+bm <- bm[index(bm) %in% index(testEnv$A005930),]
 bm$ret <- ROC(Cl(bm), type="discrete")
 simsum <- cbind(simsum, bm$ret)
 
@@ -110,12 +117,6 @@ for(i in 1:ncol(simsum)) {
   simsum.month <- cbind(simsum.month, apply.monthly(simsum[,i],sum))
 }
 
-filename <- paste("./reports/data/simsum_", factor, ".csv", sep="")
-write.zoo(simsum, file=filename, sep=",")
-filename <- paste("./reports/data/simsum.month_", factor, ".csv", sep="")
-write.zoo(simsum.month, file=filename, sep=",")
-
-## For viewing on R console
 # 5yr Performance Analysis
 charts.PerformanceSummary(simsum[,c(test.col,peers.col,test2.col)], main='Cummulative Performance', geometric=TRUE, wealth.index=TRUE, ylog=TRUE, event.labels=TRUE)
 charts.PerformanceSummary(simsum[,c(test.col,peers.col,index.col)], main='Simple Performance', geometric=FALSE, wealth.index=TRUE, event.labels=TRUE)
