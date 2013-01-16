@@ -34,7 +34,7 @@
 <<echo = false, results = hide>>=
 require('xtable')
 require('PerformanceAnalytics')
-factor <- "Foreign_1W_Mkt_cap"
+factor <- "PS_12M_FWD"
 simsum <- read.zoo(paste("./data/simsum_", factor, ".csv", sep=""), header=TRUE, sep=",", tz="")
 simsum <- as.xts(simsum)
 simsum.month <- read.zoo(paste("./data/simsum.month_", factor, ".csv", sep=""), header=TRUE, sep=",", tz="")
@@ -43,9 +43,9 @@ simsum.month <- as.xts(simsum.month)
 best.col <- 1
 worst.col <- 5
 index.col <- 6
-test.col <- 1
-test2.col <- 6
-peers.col <- c(2,3,4,5,7,8)
+test.col <- best.col
+peers.col <- c(1:8)
+peers.col <- peers.col[!(peers.col %in% c(test.col, index.col)) ]
 # Rolling Setting
 simsum.length <- dim(simsum)[1]
 trailing1y.rows <- ((simsum.length - 51):simsum.length)
@@ -58,7 +58,7 @@ This documents go through performance of \verb|\Sexpr{factor}|. Simulation perio
 \subsection{Tables}
 <<echo = false, results = tex>>=
 print(xtable(t(table.CalendarReturns(simsum.month[,c(test.col,peers.col,index.col)])), center="centering", caption="Calendar Returns"), caption.placement="top")
-print(xtable(t(table.CalendarReturns(simsum.month[,c(test2.col)])), center="centering", caption="Calendar Returns"), caption.placement="top")
+print(xtable(t(table.CalendarReturns(simsum.month[,c(index.col)])), center="centering", caption="Calendar Returns"), caption.placement="top")
 print(xtable(table.AnnualizedReturns(simsum[,c(test.col,peers.col,index.col)]), center="centering", caption="Annualized Returns"), caption.placement="top")
 print(xtable(table.Stats(simsum[,c(test.col,peers.col,index.col)]), center="centering", caption="Statistics"), caption.placement="top")
 @

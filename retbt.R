@@ -31,18 +31,41 @@ initDate <- '2006-01-01'
 DB_info <- "Driver={MySQL ODBC 5.1 Driver};DataBase=;Pwd=3450;UID=abcd;Server=localhost;OPTION=3"
 
 #Load Data - Factors
-attr_condition <- "Select tDate, Close, Mkt_Cap, Inst_1W, Sec_1W, Fund_1W, Pension_1W, Foreign_1W, Others_1W from sim.f01 where sCode = "
+attr_condition <- "Select tDate, Close, Mkt_Cap, PS_12M_FWD from sim.f01 where sCode = "
 getSymbols.DB(DB_info, attr_condition, symbols, from=initDate, env=factorEnv)
+
+adj_factor <- "PS_12M_FWD"
+factor <- "PS_12M_FWD"
+adj <- FALSE
+
+##Add Column
+#factor_name <- "PE_12M_FWD"
+#Adjusting Factor
+#factor <- "EY_12M_FWD"
+#allsimdata[[factor]] <- 1/allsimdata[[factor_name]]
+#factor <- paste(factor_name,"Mkt_cap", sep="_")
+#allsimdata[[factor]] <- allsimdata[[factor_name]] / allsimdata$Mkt_Cap
+#####Let do factor adjusting here..
 
 #Make adjut factorEnv
 for(symbol in symbols) {
+  if(adj) {
+    #@@ Adjust Factor
+    #Naming Part
+    factorEnv[[symbol]]$adj_factor <- rep(NA, nrow(factorEnv[[symbol]]))
+    names(factorEnv[[symbol]])[ncol(factorEnv[[symbol]])] <- factor
+    #Factor adjust Part
+    factorEnv[[symbol]][,factor] <- (factorEnv[[symbol]][,adj_factor]/lag(factorEnv[[symbol]][,adj_factor],4)) - 1
+    factorEnv[[symbol]][which((factorEnv[[symbol]][,adj_factor] < 0) | (lag(factorEnv[[symbol]][,adj_factor],4) < 0)), factor] <- NA # NA Negative NI
+    #@@ End of Adjusting factor
+  }
   #Lagging Except Price -> For backtesting purpose
   Close <- Cl(factorEnv[[symbol]])
   factorEnv[[symbol]] <- lag(factorEnv[[symbol]])
   factorEnv[[symbol]][,'Close'] <- Close
   #Return 
   factorEnv[[symbol]]$ret <- ROC(Cl(factorEnv[[symbol]]), type="discrete")
-  factorEnv[[symbol]]$ret_1W <- lag(factorEnv[[symbol]]$ret)
+  #factorEnv[[symbol]]$ret_1W <- lag(factorEnv[[symbol]]$ret) Unnecessary
 }
 ## Note: you can make it fwd return instead of using backward return
 
@@ -51,21 +74,19 @@ allsimdata <- bt.convertdata(factorEnv)
 #Ranking
 allsimdata[['Mkt_cap_Rank']] <- bt.rank(allsimdata, 'Mkt_Cap', 'date')
 #### Mkt_Cap filtering
-MktCap.limit <- 50
+MktCap.limit <- 100
 allsimdata <- allsimdata[which(allsimdata$Mkt_cap_Rank < MktCap.limit + 1),]
 
-#Add Column
-factor_name <- "Foreign_1W"
-factor <- paste(factor_name,"Mkt_cap", sep="_")
-allsimdata[[factor]] <- allsimdata[[factor_name]] / allsimdata$Mkt_Cap
-
 #Making Quantile
-allsimdata <- bt.quantile(allsimdata, factor, 5, name='sig')
-allsimdata <- bt.quantile(allsimdata, 'ret_1W', 5, name='sig2')
+sliceNum <- 5
+allsimdata <- bt.quantile(allsimdata, factor, sliceNum, name='sig')
+  #allsimdata <- bt.quantile(allsimdata, 'ret_1W', 5, name='sig2')
 
+################## Re-run from here to adjust test.col
 # Mean of categorized return
 simsum <- bt.simreturn(allsimdata, 0.003)
-simsum.s <- bt.simreturn(allsimdata, 0) # Return for Short!
+simsum.s <- bt.simreturn(allsimdata, -0.003) # Return for Short! 
+  ## Note: Tax Cost should be negative to be substracted later
 
 # Benchmark
 bmname <- 'KM1'
@@ -78,46 +99,50 @@ simsum <- cbind(simsum, bm$ret)
 colnames(simsum) <- make.names(colnames(simsum))
 colnames(simsum)[ncol(simsum)] <- bmname
 
-# Test Setting#####################################################################################
+#@@ Test Setting
 best.col <- 1
 worst.col <- 5
 index.col <- 6
-###################################################################################################
+#@@
 
 # Long/short, Long/Fut
 simsum <- cbind(simsum, simsum[,best.col] - simsum[,index.col])
 colnames(simsum)[ncol(simsum)] <- 'best-bm'
-simsum <- cbind(simsum, simsum[,best.col] - simsum.s[,worst.col]-0.003) # substract tax cost
+simsum <- cbind(simsum, simsum[,best.col] - simsum.s[,worst.col])
 colnames(simsum)[ncol(simsum)] <- 'best-worst'
-# Test setting2####################################################################################
-test.col <- 1
-test2.col <- 6
-peers.col <- c(2,3,4,5,7,8)
-###################################################################################################
 
-# Period Setting##################################################################################
+#@@ Test setting2
+test.col <- best.col
+peers.col <- c(1:8)
+peers.col <- peers.col[!(peers.col %in% c(test.col, index.col)) ]
+#@@
+#@@ Period Setting
 #simsum <- simsum['/2012-06']
-###################################################################################################
+#@@
 
 # Rolling Setting
 simsum.length <- dim(simsum)[1]
 trailing1y.rows <- ((simsum.length - 51):simsum.length)
 trailing3y.rows <- ((simsum.length - 103):simsum.length)
 
-# Change to Monthly Return for table
+# Change to Monthly Return for table <- WARNING!! This might be wrong.
 simsum.month <- {}
 for(i in 1:ncol(simsum)) {
   simsum.month <- cbind(simsum.month, apply.monthly(simsum[,i],sum))
 }
 
+############# to here
+
 filename <- paste("./reports/data/simsum_", factor, ".csv", sep="")
 write.zoo(simsum, file=filename, sep=",")
 filename <- paste("./reports/data/simsum.month_", factor, ".csv", sep="")
 write.zoo(simsum.month, file=filename, sep=",")
+filename <- paste("./reports/data/allsimdata_", factor, ".csv", sep="")
+write.zoo(allsimdata, file=filename, sep=",")
 
 ## For viewing on R console
 # 5yr Performance Analysis
-charts.PerformanceSummary(simsum[,c(test.col,peers.col,test2.col)], main='Cummulative Performance', geometric=TRUE, wealth.index=TRUE, ylog=TRUE, event.labels=TRUE)
+charts.PerformanceSummary(simsum[,c(test.col,peers.col,index.col)], main='Cummulative Performance', geometric=TRUE, wealth.index=TRUE, ylog=TRUE, event.labels=TRUE)
 charts.PerformanceSummary(simsum[,c(test.col,peers.col,index.col)], main='Simple Performance', geometric=FALSE, wealth.index=TRUE, event.labels=TRUE)
 chart.RelativePerformance(simsum[,c(test.col,peers.col)], simsum[,index.col], legend.loc='topleft', ylog=TRUE)
 chart.RelativePerformance(simsum[,c(test.col)], simsum[,peers.col], legend.loc='topleft', ylog=TRUE)
