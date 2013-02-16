@@ -31,12 +31,10 @@ initDate <- '2006-01-01'
 DB_info <- "Driver={MySQL ODBC 5.1 Driver};DataBase=;Pwd=3450;UID=abcd;Server=localhost;OPTION=3"
 
 #Load Data - Factors
-attr_condition <- "Select tDate, Close, Mkt_Cap, PS_12M_FWD from sim.f01 where sCode = "
+attr_condition <- "Select tDate, High, Low, Close, Mkt_Cap from sim.s01 where sCode = "
 getSymbols.DB(DB_info, attr_condition, symbols, from=initDate, env=factorEnv)
 
-adj_factor <- "PS_12M_FWD"
-factor <- "PS_12M_FWD"
-adj <- FALSE
+## Rerun From here!!!!!!!!!!!!!!!
 
 ##Add Column
 #factor_name <- "PE_12M_FWD"
@@ -47,40 +45,43 @@ adj <- FALSE
 #allsimdata[[factor]] <- allsimdata[[factor_name]] / allsimdata$Mkt_Cap
 #####Let do factor adjusting here..
 
+adj_factor <- "tech"
+factor <- "tech"
+adj <- TRUE
+DoQuantile <- FALSE
+
 #Make adjut factorEnv
-for(symbol in symbols) {
-  if(adj) {
-    #@@ Adjust Factor
-    #Naming Part
-    factorEnv[[symbol]]$adj_factor <- rep(NA, nrow(factorEnv[[symbol]]))
-    names(factorEnv[[symbol]])[ncol(factorEnv[[symbol]])] <- factor
-    #Factor adjust Part
-    factorEnv[[symbol]][,factor] <- (factorEnv[[symbol]][,adj_factor]/lag(factorEnv[[symbol]][,adj_factor],4)) - 1
-    factorEnv[[symbol]][which((factorEnv[[symbol]][,adj_factor] < 0) | (lag(factorEnv[[symbol]][,adj_factor],4) < 0)), factor] <- NA # NA Negative NI
-    #@@ End of Adjusting factor
-  }
-  #Lagging Except Price -> For backtesting purpose
-  Close <- Cl(factorEnv[[symbol]])
-  factorEnv[[symbol]] <- lag(factorEnv[[symbol]])
-  factorEnv[[symbol]][,'Close'] <- Close
-  #Return 
-  factorEnv[[symbol]]$ret <- ROC(Cl(factorEnv[[symbol]]), type="discrete")
-  #factorEnv[[symbol]]$ret_1W <- lag(factorEnv[[symbol]]$ret) Unnecessary
+if(adj) {
+  for(symbol in symbols) {
+    signal <- stoch(get(symbol)[,c("High","Low","Close")])
+    signal <- signal*100
+    signal$sig <- rep(0,NROW(signal))
+    for(i in 60:NROW(signal)) {
+      if( (signal$slowD[i] > 80) && (signal$slowD[i] > signal$fastD[i]) ) {
+        signal$sig[i] <- -1
+      } else if( (signal$slowD[i] < 20) && (signal$slowD[i] < signal$fastD[i]) ){
+        signal$sig[i] <- 1      
+      } else {
+        signal$sig[i] <- signal$sig[i-1]
+      }
+    }  
 }
-## Note: you can make it fwd return instead of using backward return
+
 
 #Convert to data.frame
 allsimdata <- bt.convertdata(factorEnv)
 #Ranking
-allsimdata[['Mkt_cap_Rank']] <- bt.rank(allsimdata, 'Mkt_Cap', 'date')
+allsimdata[['Mkt_cap_Rank']] <- bt.rank(allsimdata, 'Mkt_cap', 'date')
 #### Mkt_Cap filtering
 MktCap.limit <- 100
 allsimdata <- allsimdata[which(allsimdata$Mkt_cap_Rank < MktCap.limit + 1),]
 
 #Making Quantile
-sliceNum <- 5
-allsimdata <- bt.quantile(allsimdata, factor, sliceNum, name='sig')
+if(DoQuantile) {
+  sliceNum <- 5
+  allsimdata <- bt.quantile(allsimdata, factor, sliceNum, name='sig')
   #allsimdata <- bt.quantile(allsimdata, 'ret_1W', 5, name='sig2')
+}
 
 ################## Re-run from here to adjust test.col
 # Mean of categorized return
@@ -101,8 +102,8 @@ colnames(simsum)[ncol(simsum)] <- bmname
 
 #@@ Test Setting
 best.col <- 1
-worst.col <- 5
-index.col <- 6
+worst.col <- 3
+index.col <- 5
 #@@
 
 # Long/short, Long/Fut
@@ -113,7 +114,7 @@ colnames(simsum)[ncol(simsum)] <- 'best-worst'
 
 #@@ Test setting2
 test.col <- best.col
-peers.col <- c(1:8)
+peers.col <- c(1:7)
 peers.col <- peers.col[!(peers.col %in% c(test.col, index.col)) ]
 #@@
 #@@ Period Setting
@@ -166,7 +167,7 @@ chart.Boxplot(simsum[trailing1y.rows,c(test.col,peers.col,index.col)])
 chart.RiskReturnScatter(simsum[trailing1y.rows,c(test.col,peers.col,index.col)])
 
 # Perfromance Table for alltime
-t(table.CalendarReturns(simsum[,c(test.col,peers.col,index.col)]))
+t(table.CalendarReturns(simsum.month[,c(test.col,peers.col,index.col)]))
 table.AnnualizedReturns(simsum[,c(test.col,peers.col,index.col)])
 table.Stats(simsum[,c(test.col,peers.col,index.col)])
 #Charts for Stats

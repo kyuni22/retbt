@@ -10,7 +10,15 @@ bt.convertdata <- function(dataEnv){
   
   #Converting xts into data framed
   for (code in codes) {
-    simdata <- data.frame(date=index(dataEnv[[code]]), coredata(dataEnv[[code]]))
+    #Lagging Except Price -> For backtesting purpose
+    tmp <- lag(dataEnv[[code]])
+    tmp$Close <- Cl(dataEnv[[code]])
+    #Return 
+    tmp$ret <- ROC(Cl(tmp), type="discrete")
+    ## Note: you can make it fwd return instead of using backward return    
+    
+    #Converting
+    simdata <- data.frame(date=index(tmp), coredata(tmp))
     simdata <- cbind(simdata, rep(code, nrow(simdata)))
     colnames(simdata)[ncol(simdata)] <- "Code"
     simdata <- simdata[-1,] #lagging make first row unnecessary -> erase!

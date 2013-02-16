@@ -34,17 +34,17 @@
 <<echo = false, results = hide>>=
 require('xtable')
 require('PerformanceAnalytics')
-factor <- "PS_12M_FWD"
+factor <- "tech"
 simsum <- read.zoo(paste("./data/simsum_", factor, ".csv", sep=""), header=TRUE, sep=",", tz="")
 simsum <- as.xts(simsum)
 simsum.month <- read.zoo(paste("./data/simsum.month_", factor, ".csv", sep=""), header=TRUE, sep=",", tz="")
 simsum.month <- as.xts(simsum.month)
 ## Test Setting
 best.col <- 1
-worst.col <- 5
-index.col <- 6
+worst.col <- 3
+index.col <- 5
 test.col <- best.col
-peers.col <- c(1:8)
+peers.col <- c(1:7)
 peers.col <- peers.col[!(peers.col %in% c(test.col, index.col)) ]
 # Rolling Setting
 simsum.length <- dim(simsum)[1]

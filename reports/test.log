@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (Web2C 2011) (format=pdflatex 2012.11.6)  16 JAN 2013 19:54
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (Web2C 2011) (format=pdflatex 2012.11.6)  29 JAN 2013 16:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -307,7 +307,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 File: graphics/plot-003.pdf Graphic file (type pdf)
 
 <use graphics/plot-003.pdf>
-Package pdftex.def Info: graphics/plot-003.pdf used on input line 143.
+Package pdftex.def Info: graphics/plot-003.pdf used on input line 142.
 (pdftex.def)             Requested size: 487.8225pt x 487.84776pt.
  [1
 
@@ -320,17 +320,17 @@ Overfull \vbox (137.08pt too high) has occurred while \output is active []
 File: graphics/plot-004.pdf Graphic file (type pdf)
 
 <use graphics/plot-004.pdf>
-Package pdftex.def Info: graphics/plot-004.pdf used on input line 150.
+Package pdftex.def Info: graphics/plot-004.pdf used on input line 149.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-005.pdf, id=23, 433.62pt x 433.62pt>
 File: graphics/plot-005.pdf Graphic file (type pdf)
 
 <use graphics/plot-005.pdf>
-Package pdftex.def Info: graphics/plot-005.pdf used on input line 151.
+Package pdftex.def Info: graphics/plot-005.pdf used on input line 150.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 149--153
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 148--152
 [] 
  []
 
@@ -338,17 +338,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 149--153
 File: graphics/plot-006.pdf Graphic file (type pdf)
 
 <use graphics/plot-006.pdf>
-Package pdftex.def Info: graphics/plot-006.pdf used on input line 157.
+Package pdftex.def Info: graphics/plot-006.pdf used on input line 156.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-007.pdf, id=25, 433.62pt x 433.62pt>
 File: graphics/plot-007.pdf Graphic file (type pdf)
 
 <use graphics/plot-007.pdf>
-Package pdftex.def Info: graphics/plot-007.pdf used on input line 158.
+Package pdftex.def Info: graphics/plot-007.pdf used on input line 157.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 156--160
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 155--159
 [] 
  []
 
@@ -357,17 +357,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 156--160
 File: graphics/plot-008.pdf Graphic file (type pdf)
 
 <use graphics/plot-008.pdf>
-Package pdftex.def Info: graphics/plot-008.pdf used on input line 162.
+Package pdftex.def Info: graphics/plot-008.pdf used on input line 161.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-009.pdf, id=42, 433.62pt x 433.62pt>
 File: graphics/plot-009.pdf Graphic file (type pdf)
 
 <use graphics/plot-009.pdf>
-Package pdftex.def Info: graphics/plot-009.pdf used on input line 163.
+Package pdftex.def Info: graphics/plot-009.pdf used on input line 162.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 161--165
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 160--164
 [] 
  []
 
@@ -375,17 +375,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 161--165
 File: graphics/plot-010.pdf Graphic file (type pdf)
 
 <use graphics/plot-010.pdf>
-Package pdftex.def Info: graphics/plot-010.pdf used on input line 169.
+Package pdftex.def Info: graphics/plot-010.pdf used on input line 168.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-011.pdf, id=44, 433.62pt x 433.62pt>
 File: graphics/plot-011.pdf Graphic file (type pdf)
 
 <use graphics/plot-011.pdf>
-Package pdftex.def Info: graphics/plot-011.pdf used on input line 170.
+Package pdftex.def Info: graphics/plot-011.pdf used on input line 169.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 168--173
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 167--172
 [] 
  []
 
@@ -395,17 +395,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 168--173
 File: graphics/plot-012.pdf Graphic file (type pdf)
 
 <use graphics/plot-012.pdf>
-Package pdftex.def Info: graphics/plot-012.pdf used on input line 175.
+Package pdftex.def Info: graphics/plot-012.pdf used on input line 174.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-013.pdf, id=73, 433.62pt x 433.62pt>
 File: graphics/plot-013.pdf Graphic file (type pdf)
 
 <use graphics/plot-013.pdf>
-Package pdftex.def Info: graphics/plot-013.pdf used on input line 176.
+Package pdftex.def Info: graphics/plot-013.pdf used on input line 175.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 174--178
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 173--177
 [] 
  []
 
@@ -413,17 +413,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 174--178
 File: graphics/plot-014.pdf Graphic file (type pdf)
 
 <use graphics/plot-014.pdf>
-Package pdftex.def Info: graphics/plot-014.pdf used on input line 180.
+Package pdftex.def Info: graphics/plot-014.pdf used on input line 179.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-015.pdf, id=75, 433.62pt x 433.62pt>
 File: graphics/plot-015.pdf Graphic file (type pdf)
 
 <use graphics/plot-015.pdf>
-Package pdftex.def Info: graphics/plot-015.pdf used on input line 181.
+Package pdftex.def Info: graphics/plot-015.pdf used on input line 180.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 179--183
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 178--182
 [] 
  []
 
@@ -433,17 +433,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 179--183
 File: graphics/plot-016.pdf Graphic file (type pdf)
 
 <use graphics/plot-016.pdf>
-Package pdftex.def Info: graphics/plot-016.pdf used on input line 187.
+Package pdftex.def Info: graphics/plot-016.pdf used on input line 186.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-017.pdf, id=104, 433.62pt x 433.62pt>
 File: graphics/plot-017.pdf Graphic file (type pdf)
 
 <use graphics/plot-017.pdf>
-Package pdftex.def Info: graphics/plot-017.pdf used on input line 188.
+Package pdftex.def Info: graphics/plot-017.pdf used on input line 187.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 186--191
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 185--190
 [] 
  []
 
@@ -451,17 +451,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 186--191
 File: graphics/plot-018.pdf Graphic file (type pdf)
 
 <use graphics/plot-018.pdf>
-Package pdftex.def Info: graphics/plot-018.pdf used on input line 193.
+Package pdftex.def Info: graphics/plot-018.pdf used on input line 192.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-019.pdf, id=106, 433.62pt x 433.62pt>
 File: graphics/plot-019.pdf Graphic file (type pdf)
 
 <use graphics/plot-019.pdf>
-Package pdftex.def Info: graphics/plot-019.pdf used on input line 194.
+Package pdftex.def Info: graphics/plot-019.pdf used on input line 193.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 192--196
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 191--195
 [] 
  []
 
@@ -471,17 +471,17 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 192--196
 File: graphics/plot-020.pdf Graphic file (type pdf)
 
 <use graphics/plot-020.pdf>
-Package pdftex.def Info: graphics/plot-020.pdf used on input line 198.
+Package pdftex.def Info: graphics/plot-020.pdf used on input line 197.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
 <graphics/plot-021.pdf, id=135, 433.62pt x 433.62pt>
 File: graphics/plot-021.pdf Graphic file (type pdf)
 
 <use graphics/plot-021.pdf>
-Package pdftex.def Info: graphics/plot-021.pdf used on input line 199.
+Package pdftex.def Info: graphics/plot-021.pdf used on input line 198.
 (pdftex.def)             Requested size: 243.91124pt x 243.91064pt.
 
-Overfull \hbox (15.32994pt too wide) in paragraph at lines 197--201
+Overfull \hbox (15.32994pt too wide) in paragraph at lines 196--200
 [] 
  []
 
@@ -490,18 +490,18 @@ Overfull \hbox (15.32994pt too wide) in paragraph at lines 197--201
 Here is how much of TeX's memory you used:
  3153 strings out of 493633
  45280 string characters out of 3145073
- 113942 words of memory out of 3000000
+ 112942 words of memory out of 3000000
  6350 multiletter control sequences out of 15000+200000
  25022 words of font info for 54 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 37i,10n,43p,337b,241s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 37i,10n,43p,331b,241s stack positions out of 5000i,500n,10000p,200000b,50000s
 <c:/usr/texlive/2011/texmf-dist/font
 s/type1/public/amsfonts/cm/cmbx12.pfb><c:/usr/texlive/2011/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmr10.pfb><c:/usr/texlive/2011/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmr17.pfb><c:/usr/texlive/2011/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmsl10.pfb><c:/usr/texlive/2011/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmtt10.pfb>
-Output written on test.pdf (7 pages, 322076 bytes).
+Output written on test.pdf (7 pages, 644517 bytes).
 PDF statistics:
  183 PDF objects out of 1000 (max. 8388607)
  128 compressed objects within 2 object streams
